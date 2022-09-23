@@ -1,0 +1,36 @@
+.cardWrapper{
+    padding: 15px;
+    background-color: whitesmoke;
+}
+
+.card{
+    display: flex;
+    flex-flow: column;
+    min-width: 300px;
+}
+
+.ant-card-body{
+    padding-top: 0px;
+    margin-top: 0px;
+}
+
+.pCard{
+    margin-bottom: 0px;
+    margin-top: 0px;
+    font-size: 15px;
+}
+
+.hCard{
+    margin-top: -10px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    font-size: 19px;
+}
+
+.asas{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgray;
+}
