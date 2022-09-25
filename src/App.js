@@ -1,24 +1,28 @@
-import React from 'react'
+import React from 'react';
 import {useState, useEffect} from "react";
-import './style.css'
-import CardPeople from './card'
-import {database} from "./database";
+import './style/style.css';
+import CardPeople from './components/card';
+import {database} from "./http/database";
+import {getData} from "./components/filtering";
+import Filter from "./components/filtering";
+
 
 function App() {
-    const [db, setDb] = useState()
 
+    const [db, setDb] = useState()
 
     useEffect(() => {
             database().then(({data}) => {
                 setDb(data)
         })
+        //   getData().then(r => setDb(r)) - gender\nat ?
     }, [])
 
     if (!db) return <div>Loading...</div>
 
 
     const cards = db.results.map(item => {
-        console.log(item)
+        // console.log(item)
         return(
             <CardPeople
                 key={item.id.value}
@@ -34,6 +38,7 @@ function App() {
 
   return (
     <div className="asas">
+        <Filter/>
         {cards}
     </div>
   );

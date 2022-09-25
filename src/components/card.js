@@ -1,5 +1,5 @@
 import React from 'react'
-import './style.css'
+import '../style/style.css'
 import { Card, Col, Row} from 'antd';
 
 function CardPeople(props) {
@@ -14,7 +14,7 @@ function CardPeople(props) {
                 cover={
                 <img
                     style={{padding: '10px'}}
-                    alt={props.nat}
+                    alt="avatar"
                     src={props.img}/>
                 }
             >
@@ -22,6 +22,7 @@ function CardPeople(props) {
                 <p className="pCard">{props.gender}</p>
                 <p className="pCard">{props.email}</p>
                 <p className="pCard">{props.date.substring(0, 10)}</p>
+                <p className="pCardN">{props.nat}</p>
             </Card>
                 </Col>
             </Row>
