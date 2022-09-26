@@ -10,15 +10,29 @@ const { Option } = Select;
 function App() {
 
     const [data, setData] = useState()
-    const [gender, setGender] = useState('all')
-    const [nationality, setNationality] = useState('all')
+    const [gender, setGender] = useState(() => {
+        const savedG = localStorage.getItem('G')
+        const initialG = JSON.parse(savedG);
+        return initialG || "all";
+    })
+    const [nationality, setNationality] = useState(() => {
+        const savedN = localStorage.getItem('N')
+        const initialN = JSON.parse(savedN);
+        return initialN || "all";
+    })
     const nationalities = ['all', 'AU', 'BR', 'CA', 'CH', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'IE', 'IR', 'NO', 'NL', 'NZ', 'TR', 'US']
 
+    const remG = gender
+    const remN = nationality
 
     useEffect(async () => {
         setData( await getData(gender, nationality))
     }, [])
 
+    useEffect(() => {
+       localStorage.setItem('G', JSON.stringify(remG))
+       localStorage.setItem('N', JSON.stringify(remN))
+    }, [remG, remN])
 
     if (!data) return <div>Loading...</div>
 
@@ -38,6 +52,7 @@ function App() {
             <Form.Item name="gender">
                     <Select
                         placeholder="Gender"
+                        defaultValue={JSON.parse(localStorage.getItem('G')) || ""}
                         style={{ width: 120, marginRight: 25 }}
                         onChange={onGenderChange}
                     >
@@ -52,6 +67,7 @@ function App() {
                 <Select
                     mode="multiple"
                     placeholder="Nationality"
+                    defaultValue={JSON.parse(localStorage.getItem('N')) || ""}
                     style={{ width: 120 }}
                     onChange={onNationalityChange}
                 >
