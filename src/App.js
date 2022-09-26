@@ -1,45 +1,26 @@
 import React from 'react';
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import CardPeople from './components/card';
-import {getData} from "../http";
-import {Button, Form, Select} from "antd";
+import { getData } from "./http/index";
 import './style/style.css';
+import { Button, Form, Select } from "antd";
 const { Option } = Select;
 
 
 function App() {
 
-    const [db, setDb] = useState()
+    const [data, setData] = useState()
     const [gender, setGender] = useState('all')
     const [nationality, setNationality] = useState('all')
-    const [filt, setFilt] = useState([])
+    const nationalities = ['all', 'AU', 'BR', 'CA', 'CH', 'DE', 'DK', 'ES', 'FI', 'FR', 'GB', 'IE', 'IR', 'NO', 'NL', 'NZ', 'TR', 'US']
 
-    useEffect(() => {
 
+    useEffect(async () => {
+        setData( await getData(gender, nationality))
     }, [])
 
-    if (!db) return <div>Loading...</div>
 
-
-    const cards = db.results.map(item => {
-        // console.log(item)
-        return(
-            <CardPeople
-                key={item.id.value}
-                name={item.name.first + " " + item.name.last}
-                gender={item.gender}
-                email={item.email}
-                date={item.dob.date}
-                img={item.picture.large}
-                nat={item.nat}
-            />
-        )
-    })
-
-    const layout = {
-        labelCol: { span: 8 },
-        wrapperCol: { span: 16 },
-    };
+    if (!data) return <div>Loading...</div>
 
     function onNationalityChange(e) {
         setNationality(e)
@@ -50,62 +31,65 @@ function App() {
     }
 
   return (
-    <div className="asas">
-        <Form {...layout} className="formM" name="form">
-            <Form.Item
-                name="gender"
-            >
-                <Select
-                    defaultValue="Gender"
-                    style={{ width: 120, marginRight: 25 }}
-                    onChange={onGenderChange}
-                >
-                    <Option value="all">All</Option>
-                    <Option value="male">Male</Option>
-                    <Option value="female">Female</Option>
-                </Select>
+  <div>
+        <Form className="formM" name="form">
+
+
+            <Form.Item name="gender">
+                    <Select
+                        placeholder="Gender"
+                        style={{ width: 120, marginRight: 25 }}
+                        onChange={onGenderChange}
+                    >
+                            <Option value="all">All</Option>
+                            <Option value="male">Male</Option>
+                            <Option value="female">Female</Option>
+                    </Select>
             </Form.Item>
 
-            <Form.Item
-                name="nationality"
-            >
+
+            <Form.Item name="nationality">
                 <Select
-                    defaultValue="Nationality"
+                    mode="multiple"
+                    placeholder="Nationality"
                     style={{ width: 120 }}
                     onChange={onNationalityChange}
                 >
-                    <Option value="all">All</Option>
-                    <Option value="au">AU</Option>
-                    <Option value="br">BR</Option>
-                    <Option value="ca">CA</Option>
-                    <Option value="ch">CH</Option>
-                    <Option value="de">DE</Option>
-                    <Option value="dk">DK</Option>
-                    <Option value="es">ES</Option>
-                    <Option value="fi">FI</Option>
-                    <Option value="fr">FR</Option>
-                    <Option value="gb">GB</Option>
-                    <Option value="ie">IE</Option>
-                    <Option value="ir">IR</Option>
-                    <Option value="no">NO</Option>
-                    <Option value="nl">NL</Option>
-                    <Option value="nz">NZ</Option>
-                    <Option value="tr">TR</Option>
-                    <Option value="us">US</Option>
+                        {nationalities.map(item => {
+                            return <Option value={item.toLowerCase()}>{item}</Option>
+                        })}
                 </Select>
             </Form.Item>
+
+
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
                     type="primary"
                     htmlType="submit"
-                    onClick={() => getData(gender, nationality).then(r => console.log(r))}
+                    onClick={async () => setData(await getData(gender, nationality))}
                 >
-                    Submit
+                        Apply filters
                 </Button>
             </Form.Item>
+
+
         </Form>
-        {cards}
-    </div>
+
+        <div className="asas">
+        {data.map((item, index)=> {
+                return  <CardPeople
+                            key={index}
+                            name={item.name.first + " " + item.name.last}
+                            gender={item.gender}
+                            email={item.email}
+                            date={item.dob.date}
+                            img={item.picture.large}
+                            nat={item.nat}
+                        />
+                })
+        }
+        </div>
+  </div>
   );
 }
 
